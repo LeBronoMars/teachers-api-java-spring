@@ -89,7 +89,7 @@ public class AppUserController {
             response.addHeader(JwtConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
             return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (AuthenticationException exception) {
-            return new ResponseEntity<>(Collections.singletonMap("authentication_exception", exception.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Collections.singletonMap("message", exception.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
         }
     }
 

@@ -15,4 +15,6 @@ public interface AppUserRepository extends CrudRepository<AppUser, String> {
     Page<AppUser> findAll(Pageable pageable);
 
     Optional<AppUser> findByUsername(String username);
+
+    Optional<AppUser> findByEmail(String email);
 }
