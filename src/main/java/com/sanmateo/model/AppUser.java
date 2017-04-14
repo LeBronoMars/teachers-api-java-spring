@@ -77,10 +77,6 @@ public class AppUser extends BaseModel {
     @JsonProperty("civil_status")
     private String civilStatus;
 
-    @Column
-    @JsonProperty("is_synced")
-    private boolean isSynced;
-
     public String getEmployeeNo() {
         return employeeNo;
     }
@@ -209,13 +205,5 @@ public class AppUser extends BaseModel {
 
     public void setCivilStatus(String civilStatus) {
         this.civilStatus = civilStatus;
-    }
-
-    public boolean isSynced() {
-        return isSynced;
-    }
-
-    public void setSynced(boolean synced) {
-        isSynced = synced;
     }
 }

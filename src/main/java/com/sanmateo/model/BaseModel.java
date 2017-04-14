@@ -1,5 +1,6 @@
 package com.sanmateo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -32,10 +33,15 @@ public abstract class BaseModel implements Serializable {
     @Column
     private Boolean active;
 
+    @Column
+    @JsonProperty("is_synced")
+    private boolean isSynced;
+
     @PrePersist
     protected void onCreate() {
         updated = created = new Date();
         active = true;
+        isSynced = true;
     }
 
     @PreUpdate
