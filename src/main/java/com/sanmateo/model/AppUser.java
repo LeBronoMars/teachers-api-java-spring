@@ -2,13 +2,11 @@ package com.sanmateo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -16,69 +14,53 @@ import java.util.Date;
  * Created by rsbulanon on 4/14/17.
  */
 @Entity
-public class AppUser {
+public class AppUser extends BaseModel {
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "CHAR(36)", length = 36)
-    private String id;
-
-    @NotNull(message = "employee no. is required.")
     @Column(unique = true, nullable = false)
     @JsonProperty("employee_no")
     private String employeeNo;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty("first_name")
-    @NotNull(message = "first name is required.")
     private String firstName;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty("last_name")
-    @NotNull(message = "last name is required.")
     private String lastName;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty("middle_name")
-    @NotNull(message = "middle name is required.")
     private String middleName;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty("address")
-    @NotNull(message = "address is required.")
     private String address;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty("contact_no")
-    @NotNull(message = "Contact no. is required")
     private String contactNo;
 
-    @Column
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty("birth_date")
-    @NotNull(message = "birth date is required.")
+    @Column(name = "birth_date", nullable = false)
     private Date birthDate;
 
     @Column(unique = true, nullable = false)
-    @NotNull(message = "email is required.")
     private String email;
 
     @Column(unique = true, nullable = false)
-    @NotNull(message = "username is required.")
     private String username;
 
-    @Column(columnDefinition = "CHAR(30)", length = 30)
-    @NotNull(message = "role is required.")
+    @Column(columnDefinition = "CHAR(30)", length = 30, nullable = false)
     private String role;
 
-    @Column
-    @NotNull(message = "password is required.")
+    @Column(nullable = false)
     private String password;
 
-    @Column(columnDefinition = "CHAR(10)", length = 10)
+    @Column(columnDefinition = "CHAR(10)", length = 10, nullable = false)
     private String status;
 
-    @Column
+    @Column(nullable = false)
     @JsonProperty("pic_url")
     private String picUrl;
 
@@ -98,14 +80,6 @@ public class AppUser {
     @Column
     @JsonProperty("is_synced")
     private boolean isSynced;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getEmployeeNo() {
         return employeeNo;

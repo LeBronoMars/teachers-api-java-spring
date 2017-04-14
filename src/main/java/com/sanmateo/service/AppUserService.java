@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Created by rsbulanon on 4/14/17.
  */
 @Service
 @Transactional
-public class AppUserService {
+public class AppUserService extends BaseService {
     private final Logger log = LoggerFactory.getLogger(AppUserService.class);
 
     @Inject
@@ -50,6 +51,13 @@ public class AppUserService {
 
     public AppUser findOne(final String id) {
         return appUserRepository.findOne(id);
+    }
+
+    public AppUser findByUsername(String username) {
+        Optional<AppUser> appUser = appUserRepository.findByUsername(username);
+        return appUser.map(user -> {
+            return user;
+        }).orElseThrow(() -> new NotFoundException(AppUser.class, username));
     }
 
 }

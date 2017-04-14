@@ -33,7 +33,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(final String username) {
         log.debug("Authenticating {}", username);
         String lowercaseLogin = username.toLowerCase(Locale.ENGLISH);
-        Optional<AppUser> userFromDatabase = userRepository.findOneByUsername(lowercaseLogin);
+        Optional<AppUser> userFromDatabase = userRepository.findByUsername(lowercaseLogin);
         return userFromDatabase.map(user -> {
             List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
