@@ -4,6 +4,7 @@ import com.sanmateo.config.JwtConfigurer;
 import com.sanmateo.config.TokenProvider;
 import com.sanmateo.dto.AppUserDto;
 import com.sanmateo.dto.AppUserLoginDto;
+import com.sanmateo.dto.AppUserRegistrationDto;
 import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
 import com.sanmateo.service.AppUserService;
@@ -66,7 +67,7 @@ public class AppUserController {
     @RequestMapping(value = "/users/register",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createUser(@Valid @RequestBody AppUser user) throws URISyntaxException {
+    public ResponseEntity<?> createUser(@Valid @RequestBody AppUserRegistrationDto user) throws URISyntaxException {
         log.info("REST request to save User : {}", user);
         try {
             final AppUser newUser = appUserService.createUser(user);
@@ -128,8 +129,10 @@ public class AppUserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
-                    required = true, dataType = "string", paramType = "header")
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "page", value = "Used to paginate query results", dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "size", value = "Used to limit query results", dataType = "int", defaultValue = "20", paramType = "path"),
+            @ApiImplicitParam(name = "sort", value = "Used to sort query results", dataType = "string", example = "email,asc", paramType = "path"),
     })
     public ResponseEntity<Page<AppUser>> getAllUsers(Pageable pageable) throws URISyntaxException {
         final Page<AppUser> users = appUserService.findAll(pageable);
@@ -143,8 +146,7 @@ public class AppUserController {
     @RequestMapping(value = "/users/me", method = RequestMethod.GET)
     @ResponseBody
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
-                    required = true, dataType = "string", paramType = "header")
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}", required = true, dataType = "string", paramType = "header")
     })
     public ResponseEntity<AppUserDto> getLoggedInUser(HttpServletRequest request) {
         return Optional.ofNullable(request.getRemoteUser()).map(user -> {

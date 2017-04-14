@@ -1,6 +1,7 @@
 package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
+import com.sanmateo.dto.AppUserRegistrationDto;
 import com.sanmateo.exceptions.NotFoundException;
 import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
@@ -30,36 +31,49 @@ public class AppUserService {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    public AppUser createUser(final AppUser user) {
-        final Optional<AppUser> existingUserByUsername = appUserRepository.findByUsername(user.getUsername());
+    public AppUser createUser(final AppUserRegistrationDto appUserRegistrationDto) {
+        final Optional<AppUser> existingUserByUsername = appUserRepository.findByUsername(appUserRegistrationDto.getUsername());
 
         if (existingUserByUsername.isPresent()) {
-            throw new CustomException("Username: '" + user.getUsername() + "' already in use.");
+            throw new CustomException("Username: '" + appUserRegistrationDto.getUsername() + "' already in use.");
         } else {
-            final Optional<AppUser> existingUserByEmail = appUserRepository.findByEmail(user.getEmail());
+            final Optional<AppUser> existingUserByEmail = appUserRepository.findByEmail(appUserRegistrationDto.getEmail());
 
             if (existingUserByEmail.isPresent()) {
-                throw new CustomException("Email: '" + user.getEmail() + "' already in use.");
+                throw new CustomException("Email: '" + appUserRegistrationDto.getEmail() + "' already in use.");
             } else {
-                final Optional<AppUser> existingUserByEmployeeNo = appUserRepository.findByEmployeeNo(user.getEmployeeNo());
+                final Optional<AppUser> existingUserByEmployeeNo = appUserRepository.findByEmployeeNo(appUserRegistrationDto.getEmployeeNo());
 
                 if (existingUserByEmployeeNo.isPresent()) {
-                    throw new CustomException("Employee No:' " + user.getEmployeeNo() + "' already in use.");
+                    throw new CustomException("Employee No:' " + appUserRegistrationDto.getEmployeeNo() + "' already in use.");
                 } else {
-                    user.setId(null);
-                    log.info("\n\n\n password: {} \n\n\n", user.getPassword());
-                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    final AppUser newUser = new AppUser();
+                    newUser.setId(null);
+                    newUser.setEmployeeNo(appUserRegistrationDto.getEmployeeNo());
+                    newUser.setFirstName(appUserRegistrationDto.getFirstName());
+                    newUser.setMiddleName(appUserRegistrationDto.getMiddleName());
+                    newUser.setLastName(appUserRegistrationDto.getLastName());
+                    newUser.setAddress(appUserRegistrationDto.getAddress());
+                    newUser.setContactNo(appUserRegistrationDto.getContactNo());
+                    newUser.setBirthDate(appUserRegistrationDto.getBirthDate());
+                    newUser.setEmail(appUserRegistrationDto.getEmail());
+                    newUser.setUsername(appUserRegistrationDto.getUsername());
+                    newUser.setRole(appUserRegistrationDto.getRole());
+                    newUser.setPosition(appUserRegistrationDto.getPosition());
+                    newUser.setGender(appUserRegistrationDto.getGender());
+                    newUser.setCivilStatus(appUserRegistrationDto.getCivilStatus());
+                    newUser.setPassword(passwordEncoder.encode(appUserRegistrationDto.getPassword()));
 
                     /** set default status to 'Active' */
-                    user.setStatus("Active");
+                    newUser.setStatus("Active");
 
                     /** generate default Avatar */
-                    final String encodedUsername = passwordEncoder.encode(user.getEmail());
-                    user.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
+                    final String encodedUsername = passwordEncoder.encode(appUserRegistrationDto.getEmail());
+                    newUser.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
 
-                    appUserRepository.save(user);
-                    log.info("New user successfully created: {}", user);
-                    return user;
+                    appUserRepository.save(newUser);
+                    log.info("New user successfully created: {}", newUser);
+                    return newUser;
                 }
             }
         }
