@@ -2,7 +2,7 @@ package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
 import com.sanmateo.exceptions.NotFoundException;
-import com.sanmateo.exceptions.UserRegistrationException;
+import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,17 +34,17 @@ public class AppUserService {
         final Optional<AppUser> existingUserByUsername = appUserRepository.findByUsername(user.getUsername());
 
         if (existingUserByUsername.isPresent()) {
-            throw new UserRegistrationException("Username: '" + user.getUsername() + "' already in use.");
+            throw new CustomException("Username: '" + user.getUsername() + "' already in use.");
         } else {
             final Optional<AppUser> existingUserByEmail = appUserRepository.findByEmail(user.getEmail());
 
             if (existingUserByEmail.isPresent()) {
-                throw new UserRegistrationException("Email: '" + user.getEmail() + "' already in use.");
+                throw new CustomException("Email: '" + user.getEmail() + "' already in use.");
             } else {
                 final Optional<AppUser> existingUserByEmployeeNo = appUserRepository.findByEmployeeNo(user.getEmployeeNo());
 
                 if (existingUserByEmployeeNo.isPresent()) {
-                    throw new UserRegistrationException("Employee No:' " + user.getEmployeeNo() + "' already in use.");
+                    throw new CustomException("Employee No:' " + user.getEmployeeNo() + "' already in use.");
                 } else {
                     user.setId(null);
                     log.info("\n\n\n password: {} \n\n\n", user.getPassword());

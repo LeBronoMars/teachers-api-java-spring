@@ -26,6 +26,10 @@ public class School extends BaseModel {
     private String contactNo;
 
     @Column(nullable = false)
+    @JsonProperty("email")
+    private String email;
+
+    @Column(nullable = false)
     @JsonProperty("latitude")
     private double latitude;
 
