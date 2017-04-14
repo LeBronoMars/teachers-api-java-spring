@@ -29,20 +29,32 @@ public class AppUserService extends BaseService {
     private AppUserRepository appUserRepository;
 
     public AppUser createUser(final AppUser user) {
-        user.setId(null);
-        log.info("\n\n\n password: {} \n\n\n", user.getPassword());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        final Optional<AppUser> existingUserByUsername = appUserRepository.findByUsername(user.getUsername());
 
-        /** set default status to 'Active' */
-        user.setStatus("Active");
+        if (existingUserByUsername.isPresent()) {
+            throw new UsernameOrEmailAlreadyExistException(user.getUsername());
+        } else {
+            final Optional<AppUser> existingUserByEmail = appUserRepository.findByEmail(user.getEmail());
 
-        /** generate default Avatar */
-        final String encodedUsername = passwordEncoder.encode(user.getEmail());
-        user.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
+            if (existingUserByEmail.isPresent()) {
+                throw new UsernameOrEmailAlreadyExistException(user.getEmail());
+            } else {
+                user.setId(null);
+                log.info("\n\n\n password: {} \n\n\n", user.getPassword());
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        appUserRepository.save(user);
-        log.info("New user successfully created: {}", user);
-        return user;
+                /** set default status to 'Active' */
+                user.setStatus("Active");
+
+                /** generate default Avatar */
+                final String encodedUsername = passwordEncoder.encode(user.getEmail());
+                user.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
+
+                appUserRepository.save(user);
+                log.info("New user successfully created: {}", user);
+                return user;
+            }
+        }
     }
 
     public Page<AppUser> findAll(Pageable pageable) {
@@ -55,9 +67,7 @@ public class AppUserService extends BaseService {
 
     public AppUser findByUsername(String username) {
         Optional<AppUser> appUser = appUserRepository.findByUsername(username);
-        return appUser.map(user -> {
-            return user;
-        }).orElseThrow(() -> new NotFoundException(AppUser.class, username));
+        return appUser.map(user -> user).orElseThrow(() -> new NotFoundException(AppUser.class, username));
     }
 
 }
