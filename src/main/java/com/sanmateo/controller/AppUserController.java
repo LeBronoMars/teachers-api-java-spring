@@ -72,6 +72,10 @@ public class AppUserController {
         return ResponseEntity.created(new URI("/api/users/" + newUser.getId())).body(newUser);
     }
 
+    /**
+     * authenticate a user
+     *
+     * */
     @RequestMapping(value = "/user/auth", method = RequestMethod.POST)
     public ResponseEntity<?> authorize(@Valid @RequestBody AppUserLoginDto appUserLoginDto, HttpServletResponse response) {
 
@@ -89,14 +93,6 @@ public class AppUserController {
             return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (AuthenticationException exception) {
             return new ResponseEntity<>(Collections.singletonMap("authentication_exception", exception.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    private static class LoginResponse {
-        public String token;
-
-        public LoginResponse(final String token) {
-            this.token = token;
         }
     }
 
@@ -128,6 +124,14 @@ public class AppUserController {
         final Page<AppUser> users = appUserService.findAll(pageable);
         log.info("REST request to get all users : {}", users);
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    private static class LoginResponse {
+        public String token;
+
+        public LoginResponse(final String token) {
+            this.token = token;
+        }
     }
 
     public AppUserDto convert(final AppUser appUser) {
