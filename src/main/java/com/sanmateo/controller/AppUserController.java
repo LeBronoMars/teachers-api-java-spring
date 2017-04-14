@@ -7,6 +7,7 @@ import com.sanmateo.dto.AppUserLoginDto;
 import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
 import com.sanmateo.service.AppUserService;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import java.util.Optional;
  */
 @Controller
 @RequestMapping(path = "/api")
+@Api(value = "User Module")
 public class AppUserController {
 
     private final Logger log = LoggerFactory.getLogger(AppUserController.class);
@@ -76,8 +78,7 @@ public class AppUserController {
 
     /**
      * authenticate a user
-     *
-     * */
+     */
     @RequestMapping(value = "/user/auth", method = RequestMethod.POST)
     public ResponseEntity<?> authorize(@Valid @RequestBody AppUserLoginDto appUserLoginDto, HttpServletResponse response) {
 
@@ -104,7 +105,11 @@ public class AppUserController {
     @RequestMapping(value = "/users/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppUserDto> getUserById(@PathVariable String id) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    public ResponseEntity<AppUserDto> getById(@PathVariable String id) {
         log.info("REST request to get User : {}", id);
         AppUser user = appUserService.findOne(id);
         return Optional.ofNullable(user)
@@ -122,6 +127,10 @@ public class AppUserController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
+                    required = true, dataType = "string", paramType = "header")
+    })
     public ResponseEntity<Page<AppUser>> getAllUsers(Pageable pageable) throws URISyntaxException {
         final Page<AppUser> users = appUserService.findAll(pageable);
         log.info("REST request to get all users : {}", users);
@@ -130,9 +139,13 @@ public class AppUserController {
 
     /**
      * get user info
-     * */
+     */
     @RequestMapping(value = "/users/me", method = RequestMethod.GET)
     @ResponseBody
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
+                    required = true, dataType = "string", paramType = "header")
+    })
     public ResponseEntity<AppUserDto> getLoggedInUser(HttpServletRequest request) {
         return Optional.ofNullable(request.getRemoteUser()).map(user -> {
             final AppUser appUser = appUserService.findByUsername(user);
