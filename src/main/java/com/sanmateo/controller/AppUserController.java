@@ -4,6 +4,7 @@ import com.sanmateo.config.JwtConfigurer;
 import com.sanmateo.config.TokenProvider;
 import com.sanmateo.dto.AppUserDto;
 import com.sanmateo.dto.AppUserLoginDto;
+import com.sanmateo.exceptions.UsernameOrEmailAlreadyExistException;
 import com.sanmateo.model.AppUser;
 import com.sanmateo.service.AppUserService;
 import org.slf4j.Logger;
@@ -65,8 +66,12 @@ public class AppUserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody AppUser user) throws URISyntaxException {
         log.info("REST request to save User : {}", user);
-        final AppUser newUser = appUserService.createUser(user);
-        return ResponseEntity.created(new URI("/api/users/" + newUser.getId())).body(newUser);
+        try {
+            final AppUser newUser = appUserService.createUser(user);
+            return ResponseEntity.created(new URI("/api/users/" + newUser.getId())).body(newUser);
+        } catch (UsernameOrEmailAlreadyExistException e) {
+            return new ResponseEntity<>(Collections.singletonMap("message", e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

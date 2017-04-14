@@ -1,6 +1,8 @@
 package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
+import com.sanmateo.exceptions.NotFoundException;
+import com.sanmateo.exceptions.UsernameOrEmailAlreadyExistException;
 import com.sanmateo.model.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,7 @@ import java.util.Optional;
  */
 @Service
 @Transactional
-public class AppUserService extends BaseService {
+public class AppUserService {
     private final Logger log = LoggerFactory.getLogger(AppUserService.class);
 
     @Inject
