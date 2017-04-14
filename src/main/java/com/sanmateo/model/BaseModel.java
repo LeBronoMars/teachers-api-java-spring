@@ -1,5 +1,6 @@
 package com.sanmateo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,9 +25,11 @@ public abstract class BaseModel implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created", nullable = false)
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss'Z'")
     private Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss'Z'")
     @Column(name = "updated", nullable = false)
     private Date updated;
 

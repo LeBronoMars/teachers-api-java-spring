@@ -1,5 +1,6 @@
 package com.sanmateo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -43,6 +44,7 @@ public class AppUser extends BaseModel {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonProperty("birth_date")
     @Column(name = "birth_date", nullable = false)
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthDate;
 
     @Column(unique = true, nullable = false)
