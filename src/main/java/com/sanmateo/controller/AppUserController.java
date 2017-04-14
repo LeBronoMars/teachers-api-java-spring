@@ -67,7 +67,7 @@ public class AppUserController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody AppUser user) throws URISyntaxException {
-        log.debug("REST request to save User : {}", user);
+        log.info("REST request to save User : {}", user);
         final AppUser newUser = appUserService.createUser(user);
         return ResponseEntity.created(new URI("/api/users/" + newUser.getId())).body(newUser);
     }
@@ -75,12 +75,12 @@ public class AppUserController {
     @RequestMapping(value = "/user/auth", method = RequestMethod.POST)
     public ResponseEntity<?> authorize(@Valid @RequestBody AppUserLoginDto appUserLoginDto, HttpServletResponse response) {
 
-        log.debug("REST request to authenticate user : {}", appUserLoginDto);
+        log.info("REST request to authenticate user : {}", appUserLoginDto);
         final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(appUserLoginDto.getUsername(),
                         appUserLoginDto.getPassword());
 
-        log.debug("UsernamePassword Auth Token : {}", authenticationToken);
+        log.info("UsernamePassword Auth Token : {}", authenticationToken);
         try {
             final Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -107,7 +107,7 @@ public class AppUserController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppUserDto> getUserById(@PathVariable String id) {
-        log.debug("REST request to get User : {}", id);
+        log.info("REST request to get User : {}", id);
         AppUser user = appUserService.findOne(id);
         return Optional.ofNullable(user)
                 .map(result -> new ResponseEntity<>(
@@ -126,7 +126,7 @@ public class AppUserController {
     @Transactional(readOnly = true)
     public ResponseEntity<Page<AppUser>> getAllUsers(Pageable pageable) throws URISyntaxException {
         final Page<AppUser> users = appUserService.findAll(pageable);
-        log.debug("REST request to get all users : {}", users);
+        log.info("REST request to get all users : {}", users);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

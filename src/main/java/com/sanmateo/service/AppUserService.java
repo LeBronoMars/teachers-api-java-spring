@@ -30,10 +30,17 @@ public class AppUserService {
     public AppUser createUser(final AppUser user) {
         user.setId(null);
         log.info("\n\n\n password: {} \n\n\n", user.getPassword());
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        /** set default status to 'Active' */
+        user.setStatus("Active");
+
+        /** generate default Avatar */
+        final String encodedUsername = passwordEncoder.encode(user.getEmail());
+        user.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
+
         appUserRepository.save(user);
-        log.debug("New user successfully created: {}", user);
+        log.info("New user successfully created: {}", user);
         return user;
     }
 
