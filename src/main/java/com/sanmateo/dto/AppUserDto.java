@@ -15,7 +15,7 @@ public class AppUserDto {
     private String lastName;
     private String middleName;
     private String address;
-    private Date contactNo;
+    private String contactNo;
     private Date birthDate;
     private String email;
     private String username;
