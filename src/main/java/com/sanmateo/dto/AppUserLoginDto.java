@@ -1,5 +1,6 @@
 package com.sanmateo.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -8,6 +9,9 @@ import lombok.Data;
 @Data
 public class AppUserLoginDto {
 
+    @ApiModelProperty(example = "nedflanders")
     private String username;
+
+    @ApiModelProperty(example = "P@ssw0rd")
     private String password;
 }
