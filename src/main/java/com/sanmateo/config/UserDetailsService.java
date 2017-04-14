@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 /**
- * Created by ginduc on 20/07/16.
+ * Created by rsbulanon on 4/14/17.
  */
 @Component("userDetailsService")
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
