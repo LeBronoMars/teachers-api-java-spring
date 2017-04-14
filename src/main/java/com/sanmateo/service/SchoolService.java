@@ -2,7 +2,6 @@ package com.sanmateo.service;
 
 import com.sanmateo.dao.SchoolRepository;
 import com.sanmateo.exceptions.CustomException;
-import com.sanmateo.model.AppUser;
 import com.sanmateo.model.School;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * Base implementation of model classes
- * 
+ *
  * Created by rsbulanon on 4/14/17.
  */
 @Data
