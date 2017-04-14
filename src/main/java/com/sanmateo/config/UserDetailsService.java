@@ -1,0 +1,46 @@
+package com.sanmateo.config;
+
+import com.sanmateo.dao.AppUserRepository;
+import com.sanmateo.model.AppUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+
+/**
+ * Created by ginduc on 20/07/16.
+ */
+@Component("userDetailsService")
+public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+
+    private final Logger log = LoggerFactory.getLogger(UserDetailsService.class);
+
+    @Inject
+    private AppUserRepository userRepository;
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(final String username) {
+        log.debug("Authenticating {}", username);
+        String lowercaseLogin = username.toLowerCase(Locale.ENGLISH);
+        Optional<AppUser> userFromDatabase = userRepository.findOneByUsername(lowercaseLogin);
+        return userFromDatabase.map(user -> {
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
+            return new org.springframework.security.core.userdetails.User(lowercaseLogin,
+                    user.getPassword(),
+                    grantedAuthorities);
+        }).orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the " +
+                "database"));
+    }
+}
