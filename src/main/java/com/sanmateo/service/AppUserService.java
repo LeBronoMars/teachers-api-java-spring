@@ -2,7 +2,7 @@ package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
 import com.sanmateo.exceptions.NotFoundException;
-import com.sanmateo.exceptions.UsernameOrEmailAlreadyExistException;
+import com.sanmateo.exceptions.UserRegistrationException;
 import com.sanmateo.model.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,27 +34,33 @@ public class AppUserService {
         final Optional<AppUser> existingUserByUsername = appUserRepository.findByUsername(user.getUsername());
 
         if (existingUserByUsername.isPresent()) {
-            throw new UsernameOrEmailAlreadyExistException(user.getUsername());
+            throw new UserRegistrationException("Username: '" + user.getUsername() + "' already in use.");
         } else {
             final Optional<AppUser> existingUserByEmail = appUserRepository.findByEmail(user.getEmail());
 
             if (existingUserByEmail.isPresent()) {
-                throw new UsernameOrEmailAlreadyExistException(user.getEmail());
+                throw new UserRegistrationException("Email: '" + user.getEmail() + "' already in use.");
             } else {
-                user.setId(null);
-                log.info("\n\n\n password: {} \n\n\n", user.getPassword());
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                final Optional<AppUser> existingUserByEmployeeNo = appUserRepository.findByEmployeeNo(user.getEmployeeNo());
 
-                /** set default status to 'Active' */
-                user.setStatus("Active");
+                if (existingUserByEmployeeNo.isPresent()) {
+                    throw new UserRegistrationException("Employee No:' " + user.getEmployeeNo() + "' already in use.");
+                } else {
+                    user.setId(null);
+                    log.info("\n\n\n password: {} \n\n\n", user.getPassword());
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-                /** generate default Avatar */
-                final String encodedUsername = passwordEncoder.encode(user.getEmail());
-                user.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
+                    /** set default status to 'Active' */
+                    user.setStatus("Active");
 
-                appUserRepository.save(user);
-                log.info("New user successfully created: {}", user);
-                return user;
+                    /** generate default Avatar */
+                    final String encodedUsername = passwordEncoder.encode(user.getEmail());
+                    user.setPicUrl("http://www.gravatar.com/avatar/" + encodedUsername + "?d=identicon");
+
+                    appUserRepository.save(user);
+                    log.info("New user successfully created: {}", user);
+                    return user;
+                }
             }
         }
     }

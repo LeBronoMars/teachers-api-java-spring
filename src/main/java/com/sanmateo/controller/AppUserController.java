@@ -4,7 +4,7 @@ import com.sanmateo.config.JwtConfigurer;
 import com.sanmateo.config.TokenProvider;
 import com.sanmateo.dto.AppUserDto;
 import com.sanmateo.dto.AppUserLoginDto;
-import com.sanmateo.exceptions.UsernameOrEmailAlreadyExistException;
+import com.sanmateo.exceptions.UserRegistrationException;
 import com.sanmateo.model.AppUser;
 import com.sanmateo.service.AppUserService;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class AppUserController {
         try {
             final AppUser newUser = appUserService.createUser(user);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getId())).body(newUser);
-        } catch (UsernameOrEmailAlreadyExistException e) {
+        } catch (UserRegistrationException e) {
             return new ResponseEntity<>(Collections.singletonMap("message", e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
         }
     }
