@@ -1,8 +1,13 @@
 package com.sanmateo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 /**
@@ -12,6 +17,16 @@ import java.util.Date;
 public class AppUserDto {
 
     private String id;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonProperty("created_at")
+    private Date createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonProperty("updated_at")
+    private Date updatedAt;
+
+    private Boolean active;
 
     @JsonProperty("employee_no")
     private String employeeNo;

@@ -167,6 +167,9 @@ public class AppUserController {
     public AppUserDto convert(final AppUser appUser) {
         final AppUserDto userDto = new AppUserDto();
         userDto.setId(appUser.getId());
+        userDto.setCreatedAt(appUser.getCreatedAt());
+        userDto.setUpdatedAt(appUser.getUpdatedAt());
+        userDto.setActive(appUser.getActive());
         userDto.setEmployeeNo(appUser.getEmployeeNo());
         userDto.setFirstName(appUser.getFirstName());
         userDto.setMiddleName(appUser.getMiddleName());
