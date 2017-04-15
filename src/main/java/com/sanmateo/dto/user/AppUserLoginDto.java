@@ -1,4 +1,4 @@
-package com.sanmateo.dto;
+package com.sanmateo.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

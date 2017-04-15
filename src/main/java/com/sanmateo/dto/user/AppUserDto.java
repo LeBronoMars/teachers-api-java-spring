@@ -1,4 +1,4 @@
-package com.sanmateo.dto;
+package com.sanmateo.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

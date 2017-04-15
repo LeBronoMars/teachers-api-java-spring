@@ -2,9 +2,9 @@ package com.sanmateo.controller;
 
 import com.sanmateo.config.JwtConfigurer;
 import com.sanmateo.config.TokenProvider;
-import com.sanmateo.dto.AppUserDto;
-import com.sanmateo.dto.AppUserLoginDto;
-import com.sanmateo.dto.AppUserRegistrationDto;
+import com.sanmateo.dto.user.AppUserDto;
+import com.sanmateo.dto.user.AppUserLoginDto;
+import com.sanmateo.dto.user.AppUserRegistrationDto;
 import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
 import com.sanmateo.service.AppUserService;

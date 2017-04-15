@@ -1,7 +1,7 @@
 package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
-import com.sanmateo.dto.AppUserRegistrationDto;
+import com.sanmateo.dto.user.AppUserRegistrationDto;
 import com.sanmateo.exceptions.NotFoundException;
 import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
