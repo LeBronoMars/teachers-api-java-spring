@@ -114,7 +114,7 @@ public class AppUserController {
         AppUser user = appUserService.findOne(id);
         return Optional.ofNullable(user)
                 .map(result -> new ResponseEntity<>(
-                        convert(result),
+                        appUserService.convert(result),
                         HttpStatus.OK))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
@@ -150,7 +150,7 @@ public class AppUserController {
     public ResponseEntity<AppUserDto> getLoggedInUser(HttpServletRequest request) {
         return Optional.ofNullable(request.getRemoteUser()).map(user -> {
             final AppUser appUser = appUserService.findByUsername(user);
-            final AppUserDto userDto = convert(appUser);
+            final AppUserDto userDto = appUserService.convert(appUser);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         }).orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null));
     }
@@ -161,30 +161,5 @@ public class AppUserController {
         public LoginResponse(final String token) {
             this.token = token;
         }
-    }
-
-    public AppUserDto convert(final AppUser appUser) {
-        final AppUserDto userDto = new AppUserDto();
-        userDto.setId(appUser.getId());
-        userDto.setCreatedAt(appUser.getCreatedAt());
-        userDto.setUpdatedAt(appUser.getUpdatedAt());
-        userDto.setActive(appUser.getActive());
-        userDto.setEmployeeNo(appUser.getEmployeeNo());
-        userDto.setFirstName(appUser.getFirstName());
-        userDto.setMiddleName(appUser.getMiddleName());
-        userDto.setLastName(appUser.getLastName());
-        userDto.setAddress(appUser.getAddress());
-        userDto.setContactNo(appUser.getContactNo());
-        userDto.setBirthDate(appUser.getBirthDate());
-        userDto.setEmail(appUser.getEmail());
-        userDto.setUsername(appUser.getUsername());
-        userDto.setRole(appUser.getRole());
-        userDto.setStatus(appUser.getStatus());
-        userDto.setPicUrl(appUser.getPicUrl());
-        userDto.setPosition(appUser.getPosition());
-        userDto.setGender(appUser.getGender());
-        userDto.setCivilStatus(appUser.getCivilStatus());
-        userDto.setSynced(appUser.isSynced());
-        return userDto;
     }
 }

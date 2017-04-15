@@ -1,6 +1,7 @@
 package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
+import com.sanmateo.dto.user.AppUserDto;
 import com.sanmateo.dto.user.AppUserRegistrationDto;
 import com.sanmateo.exceptions.NotFoundException;
 import com.sanmateo.exceptions.CustomException;
@@ -90,6 +91,31 @@ public class AppUserService {
     public AppUser findByUsername(String username) {
         Optional<AppUser> appUser = appUserRepository.findByUsername(username);
         return appUser.map(user -> user).orElseThrow(() -> new NotFoundException(AppUser.class, username));
+    }
+
+    public AppUserDto convert(final AppUser appUser) {
+        final AppUserDto userDto = new AppUserDto();
+        userDto.setId(appUser.getId());
+        userDto.setCreatedAt(appUser.getCreatedAt());
+        userDto.setUpdatedAt(appUser.getUpdatedAt());
+        userDto.setActive(appUser.getActive());
+        userDto.setEmployeeNo(appUser.getEmployeeNo());
+        userDto.setFirstName(appUser.getFirstName());
+        userDto.setMiddleName(appUser.getMiddleName());
+        userDto.setLastName(appUser.getLastName());
+        userDto.setAddress(appUser.getAddress());
+        userDto.setContactNo(appUser.getContactNo());
+        userDto.setBirthDate(appUser.getBirthDate());
+        userDto.setEmail(appUser.getEmail());
+        userDto.setUsername(appUser.getUsername());
+        userDto.setRole(appUser.getRole());
+        userDto.setStatus(appUser.getStatus());
+        userDto.setPicUrl(appUser.getPicUrl());
+        userDto.setPosition(appUser.getPosition());
+        userDto.setGender(appUser.getGender());
+        userDto.setCivilStatus(appUser.getCivilStatus());
+        userDto.setSynced(appUser.isSynced());
+        return userDto;
     }
 
 }
