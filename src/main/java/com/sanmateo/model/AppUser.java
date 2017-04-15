@@ -3,13 +3,11 @@ package com.sanmateo.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sanmateo.enums.UserRole;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -67,7 +65,8 @@ public class AppUser extends BaseModel {
 
     @Column(columnDefinition = "CHAR(30)", length = 30, nullable = false)
     @ApiModelProperty(example = "SUPER_ADMIN")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Column(nullable = false)
     @ApiModelProperty(example = "P@ssw0rd")
@@ -82,7 +81,7 @@ public class AppUser extends BaseModel {
 
     @Column(columnDefinition = "CHAR(50)", length = 50)
     @NotNull(message = "position is required.")
-    @ApiModelProperty(example = "SUPER_ADMIN")
+    @ApiModelProperty(example = "Master Teacher 1")
     private String position;
 
     @Column(columnDefinition = "CHAR(6)", length = 6)
