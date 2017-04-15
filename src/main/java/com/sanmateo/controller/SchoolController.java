@@ -1,8 +1,12 @@
 package com.sanmateo.controller;
 
+import com.sanmateo.dto.school.SchoolRegistrationDto;
 import com.sanmateo.exceptions.CustomException;
+import com.sanmateo.exceptions.NotFoundException;
 import com.sanmateo.model.School;
 import com.sanmateo.service.SchoolService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +43,19 @@ public class SchoolController {
     @RequestMapping(value = "/school",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createSchool(@Valid @RequestBody School school) throws URISyntaxException {
-        log.info("REST request to create new school : {}", school);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    public ResponseEntity<?> createSchool(@Valid @RequestBody SchoolRegistrationDto schoolRegistrationDto) throws URISyntaxException {
+        log.info("REST request to create new school : {}", schoolRegistrationDto);
         try {
-            final School newSchool = schoolService.createSchool(school);
-            return ResponseEntity.created(new URI("/api/schools/" + school.getId())).body(newSchool);
+            final School newSchool = schoolService.createSchool(schoolRegistrationDto);
+            return ResponseEntity.created(new URI("/api/schools/" + newSchool.getId())).body(newSchool);
         } catch (CustomException e) {
             return new ResponseEntity<>(Collections.singletonMap("message", e.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(Collections.singletonMap("message", e.getLocalizedMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -55,6 +65,10 @@ public class SchoolController {
     @RequestMapping(value = "/schools/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Bearer {{token}}",
+                    required = true, dataType = "string", paramType = "header")
+    })
     public ResponseEntity<School> getSchoolById(@PathVariable String id) {
         log.info("REST request to get School by Id : {}", id);
         final School school = schoolService.findOne(id);

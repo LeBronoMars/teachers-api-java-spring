@@ -2,6 +2,7 @@ package com.sanmateo.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sanmateo.enums.UserRole;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -49,7 +50,7 @@ public class AppUserRegistrationDto {
     private String username;
 
     @ApiModelProperty(example = "SUPER_ADMIN", allowableValues = "REGULAR_USER, ADMIN, SUPER_ADMIN")
-    private String role;
+    private UserRole role;
 
     @ApiModelProperty(example = "P@ssw0rd")
     private String password;

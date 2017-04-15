@@ -16,4 +16,6 @@ public interface SchoolRepository extends CrudRepository<School, String> {
     Page<School> findAll(Pageable pageable);
 
     Optional<School> findBySchoolName(String schoolName);
+
+    Optional<School> findByPrincipal(AppUser principal);
 }

@@ -36,7 +36,7 @@ public class UserDetailsService implements org.springframework.security.core.use
         Optional<AppUser> userFromDatabase = userRepository.findByUsername(lowercaseLogin);
         return userFromDatabase.map(user -> {
             List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-            grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
+            grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().name()));
             return new org.springframework.security.core.userdetails.User(lowercaseLogin,
                     user.getPassword(),
                     grantedAuthorities);

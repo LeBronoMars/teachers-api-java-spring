@@ -82,7 +82,6 @@ public class AppUserController {
      */
     @RequestMapping(value = "/user/auth", method = RequestMethod.POST)
     public ResponseEntity<?> authorize(@Valid @RequestBody AppUserLoginDto appUserLoginDto, HttpServletResponse response) {
-
         log.info("REST request to authenticate user : {}", appUserLoginDto);
         final UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(appUserLoginDto.getUsername(),

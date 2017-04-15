@@ -1,7 +1,10 @@
 package com.sanmateo.service;
 
+import com.sanmateo.dao.AppUserRepository;
 import com.sanmateo.dao.SchoolRepository;
+import com.sanmateo.dto.school.SchoolRegistrationDto;
 import com.sanmateo.exceptions.CustomException;
+import com.sanmateo.model.AppUser;
 import com.sanmateo.model.School;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +27,39 @@ public class SchoolService {
     @Autowired
     private SchoolRepository schoolRepository;
 
-    public School createSchool(final School newSchool) {
-        final Optional<School> existingSchool = schoolRepository.findBySchoolName(newSchool.getSchoolName());
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    public School createSchool(final SchoolRegistrationDto registrationDto) {
+        final Optional<School> existingSchool = schoolRepository.findBySchoolName(registrationDto.getSchoolName());
 
         if (existingSchool.isPresent()) {
-            throw new CustomException("School name: '"+ newSchool.getSchoolName() +"' already in use.");
+            throw new CustomException("School name: '"+ registrationDto.getSchoolName() +"' already in use.");
         } else {
-            return schoolRepository.save(newSchool);
+            final AppUser user = appUserRepository.findOne(registrationDto.getPrincipal());
+
+            return Optional.ofNullable(user).map(principal -> {
+                if (principal.getRole().equals("PRINCIPAL")) {
+                    log.info("Principal {}", principal);
+                    final Optional<School> isPrincipalAvailable = schoolRepository.findByPrincipal(principal);
+
+                    if (isPrincipalAvailable.isPresent()) {
+                        throw new CustomException("Principal " + principal.getFirstName() + " " + principal.getLastName()
+                                + " was already assigned to " + existingSchool.get().getSchoolName());
+                    } else {
+                        final School newSchool = new School();
+                        newSchool.setId(null);
+                        newSchool.setSchoolName(registrationDto.getSchoolName());
+                        newSchool.setSchoolAddress(registrationDto.getSchoolAddress());
+                        newSchool.setContactNo(registrationDto.getContactNo());
+                        newSchool.setEmail(registrationDto.getEmail());
+                        newSchool.setPrincipal(principal);
+                        return schoolRepository.save(newSchool);
+                    }
+                } else {
+                    throw new CustomException("Only users with Principal role are allowed to be assigned as school principal.");
+                }
+            }).orElseThrow(() -> new com.sanmateo.exceptions.NotFoundException(AppUser.class, registrationDto.getPrincipal()));
         }
     }
 

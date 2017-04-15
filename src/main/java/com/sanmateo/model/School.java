@@ -2,9 +2,12 @@ package com.sanmateo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 /**
  * Created by rsbulanon on 4/14/17.
@@ -29,11 +32,7 @@ public class School extends BaseModel {
     @JsonProperty("email")
     private String email;
 
-    @Column(nullable = false)
-    @JsonProperty("latitude")
-    private double latitude;
-
-    @Column(nullable = false)
-    @JsonProperty("longitude")
-    private double longitude;
+    @OneToOne
+    @Fetch(value = FetchMode.JOIN)
+    private AppUser principal;
 }
