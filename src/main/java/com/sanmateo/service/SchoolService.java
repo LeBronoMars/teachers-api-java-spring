@@ -2,6 +2,7 @@ package com.sanmateo.service;
 
 import com.sanmateo.dao.AppUserRepository;
 import com.sanmateo.dao.SchoolRepository;
+import com.sanmateo.dto.school.SchoolDto;
 import com.sanmateo.dto.school.SchoolRegistrationDto;
 import com.sanmateo.exceptions.CustomException;
 import com.sanmateo.model.AppUser;
@@ -30,6 +31,9 @@ public class SchoolService {
     @Autowired
     private AppUserRepository appUserRepository;
 
+    @Autowired
+    private AppUserService appUserService;
+
     public School createSchool(final SchoolRegistrationDto registrationDto) {
         final Optional<School> existingSchool = schoolRepository.findBySchoolName(registrationDto.getSchoolName());
 
@@ -39,7 +43,7 @@ public class SchoolService {
             final AppUser user = appUserRepository.findOne(registrationDto.getPrincipal());
 
             return Optional.ofNullable(user).map(principal -> {
-                if (principal.getRole().equals("PRINCIPAL")) {
+                if (principal.getPosition().toString().equalsIgnoreCase("PRINCIPAL")) {
                     log.info("Principal {}", principal);
                     final Optional<School> isPrincipalAvailable = schoolRepository.findByPrincipal(principal);
 
@@ -69,5 +73,16 @@ public class SchoolService {
 
     public School findOne(final String id) {
         return schoolRepository.findOne(id);
+    }
+
+    public SchoolDto convert(School school) {
+        final SchoolDto schoolDto = new SchoolDto();
+        schoolDto.setId(school.getId());
+        schoolDto.setSchoolName(school.getSchoolName());
+        schoolDto.setSchoolAddress(school.getSchoolAddress());
+        schoolDto.setContactNo(school.getContactNo());
+        schoolDto.setEmail(school.getEmail());
+        schoolDto.setPrincipal(appUserService.convert(school.getPrincipal()));
+        return schoolDto;
     }
 }
